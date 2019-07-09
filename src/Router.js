@@ -18,7 +18,7 @@ const RouterComp = () => {
 
                     <Scene key='createBubble'
                         title='CreateBubble'
-                        component={CreateBubble} initial/>
+                        component={CreateBubble} />
 
                     <Scene key='detailBubble'
                         title='BubbleDetail'

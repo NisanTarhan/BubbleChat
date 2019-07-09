@@ -4,17 +4,28 @@ import RNGooglePlaces from 'react-native-google-places';
 import { connect } from 'react-redux';
 import { changeTitle } from '../actions';
 import { Button } from './common';
-import { saveBubble } from '../actions';
+import { saveBubble, changeLocation } from '../actions';
 
 
 const { width, height } = Dimensions.get('window');
 
 class CreateBubble extends Component {
 
+    state = {
+        locationName : 'Search',
+        locationRestriction: {}
+    }
+
     openSearchModal() {
         RNGooglePlaces.openAutocompleteModal()
             .then((place) => {
                 console.log(place);
+                this.setState({
+                    title: '',
+                    locationName: place.name,
+                    locationRestriction: place.location
+                })
+                // this.state.changeLocation([place.location.latitude, place.location.longitude])
                 // place represents user's selection from the
                 // suggestions and it is a simplified Google Place object.
             })
@@ -22,12 +33,13 @@ class CreateBubble extends Component {
     }
 
     onTitleChanged = (text) => {
-        this.props.changeTitle(text);
+        // this.props.changeTitle(text);
+        this.setState({title: text})
     }
 
     saveBubble = () => {
-        const { title, place } = this.props;
-        this.props.saveBubble(title);
+        const { title, locationRestriction } = this.state;
+        this.props.saveBubble(title, locationRestriction);
     }
 
     render() {
@@ -36,11 +48,11 @@ class CreateBubble extends Component {
             <SafeAreaView style={styles.container}>
 
                 <TouchableOpacity style={styles.searchInput} onPress={() => this.openSearchModal()}>
-                    <Text>Search</Text>
+                    <Text>{this.state.locationName}</Text>
                 </TouchableOpacity>
 
                 <TextInput
-                    value={this.props.title}
+                    value={this.state.title}
                     onChangeText={this.onTitleChanged}
                     placeholder='Title'
                     maxLength={25}
@@ -57,8 +69,7 @@ class CreateBubble extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        height: height,
-        width: width,
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center'
     },
@@ -68,7 +79,6 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 5,
         margin: 8,
-        paddingRight: 7,
         height: 40,
         width: width * 0.7
     },
@@ -82,16 +92,21 @@ const styles = StyleSheet.create({
         marginBottom: 70,
     },
     searchInput: {
-        backgroundColor: 'blue',
+        backgroundColor: '#fff',
         height: 40,
-        width: width * 0.7
+        width: width * 0.7,
+        borderRadius: 5,
+        borderWidth: 1,
+        alignItems: 'flex-start',
+        justifyContent: 'center',
+        paddingLeft: 5,
     }
 })
 
 const mapStateToProps = state => {
     console.log(state)
-    const { title, loading } = state.mapReducer;
-    return { title, loading }
+    const { title, loading, location } = state.mapReducer;
+    return { title, loading, location }
 }
 
-export default connect(mapStateToProps, { changeTitle, saveBubble })(CreateBubble);
+export default connect(mapStateToProps, { changeTitle, saveBubble, changeLocation })(CreateBubble);
