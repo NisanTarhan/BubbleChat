@@ -9,7 +9,6 @@ import {
 const INITIAL_STATE = {
     email: '',
     password: '',
-    user: {},
     error: '',
     loading: false
 }

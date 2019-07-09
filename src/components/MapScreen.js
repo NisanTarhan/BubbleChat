@@ -13,7 +13,6 @@ const { width, height } = Dimensions.get('window');
 
 
 class MapScreen extends Component {
-
   state = {
     region: {
       latitude: 0,
@@ -36,10 +35,6 @@ class MapScreen extends Component {
     //   },  
     // }]
   }
-
-  // onRegionChange(region) {
-  //   this.setState({ region });
-  // }
 
   // componentWillMount() {
   //   if(this.props.data == undefined){ 
@@ -70,11 +65,6 @@ class MapScreen extends Component {
     this.props.fetchBuble();
   }
 
-  // onRegionChange = (region) => {
-  //   console.log(region)
-  //   this.props.changeRegion(region)
-  // }
-
   render() {
 
     return (
@@ -85,14 +75,18 @@ class MapScreen extends Component {
         // onRegionChange={this.onRegionChange}
         >
 
-          {/* {this.props.bubbles.map(bubble => (
-            <MapView.Marker
-              key={bubble.uId}
-              coordinate={bubble.location}
-              title={bubble.title}
-              description="Açıklama"
-            />
-          ))}  */}
+          {this.props.bubbles.map(bubble => {
+            console.log('BUBBLE:')
+            console.log(bubble.location)
+            return (
+              <MapView.Marker
+                key={bubble.uId}
+                coordinate={bubble.location}
+                title={bubble.title}
+                description="Açıklama"
+              />
+            )
+          })}
 
         </MapView>
 

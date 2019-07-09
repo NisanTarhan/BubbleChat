@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
     console.log(state)
-    const { title, loading, location } = state.mapReducer;
+    const { title, loading, location } = state.createReducer;
     return { title, loading, location }
 }
 
