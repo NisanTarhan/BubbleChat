@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import firebase from 'firebase';
-import { View, StyleSheet, TouchableOpacity, Image, Dimensions } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, TouchableHighlight, Image, Text, Dimensions } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import { changeRegion, fetchBuble } from '../actions';
-import MapView from 'react-native-maps';
+import { Marker } from 'react-native-maps';
+import MapView from 'react-native-map-clustering';
 import addButton from '../images/add_bubble.png';
 import exitButton from '../images/exit.png';
 
@@ -15,10 +16,10 @@ const { width, height } = Dimensions.get('window');
 class MapScreen extends Component {
   state = {
     region: {
-      latitude: 0,
-      longitude: 0,
-      latitudeDelta: 0,
-      longitudeDelta: 0,
+      latitude: 38.963745,
+      longitude: 35.243322,
+      latitudeDelta: 20.4922,
+      longitudeDelta: 20.4421,
     },
     // markers: [{
     //   title: 'hello',
@@ -36,31 +37,6 @@ class MapScreen extends Component {
     // }]
   }
 
-  // componentWillMount() {
-  //   if(this.props.data == undefined){ 
-  //     this.setState({
-  //       region:{
-  //         latitude: 41.0082376,
-  //         longitude: 28.9783589,
-  //         latitudeDelta: 0.0922,
-  //         longitudeDelta: 0.0421,
-  //       }
-  //     })
-  //   }else{
-  //     console.log('CreateBubbledan gelen: ' )
-  //     console.log(this.props.data.location)
-  //     const {latitude, longitude} = this.props.data.location;
-  //     this.setState({
-  //       region:{
-  //         latitude: latitude,
-  //         longitude: longitude,
-  //         latitudeDelta: 0.0922,
-  //         longitudeDelta: 0.0421,
-  //       }
-  //     })
-  //   }   
-  // }
-
   componentDidMount() {
     this.props.fetchBuble();
   }
@@ -71,7 +47,12 @@ class MapScreen extends Component {
       <View style={{ flex: 1 }}>
         <MapView
           style={{ flex: 1 }}
-        // region={this.state.region}
+          clustering={true}
+          clusterColor='#000'
+          clusterTextColor='#fff'
+          clusterBorderColor='#fff'
+          // clusterBorderWidth={4}
+          region={this.state.region}
         // onRegionChange={this.onRegionChange}
         >
 
@@ -79,12 +60,14 @@ class MapScreen extends Component {
             console.log('BUBBLE:')
             console.log(bubble.location)
             return (
-              <MapView.Marker
+              <Marker
                 key={bubble.uId}
                 coordinate={bubble.location}
                 title={bubble.title}
-                description="Açıklama"
-              />
+                image={require('../images/marker.png')}
+                onPress={() => Actions.bubbleDetail({ bubbleTitle: bubble.title })}
+              >
+              </Marker>
             )
           })}
 

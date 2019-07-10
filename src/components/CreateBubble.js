@@ -12,6 +12,7 @@ const { width, height } = Dimensions.get('window');
 class CreateBubble extends Component {
 
     state = {
+        title: '',
         locationName : 'Search',
         locationRestriction: {}
     }
@@ -25,11 +26,8 @@ class CreateBubble extends Component {
                     locationName: place.name,
                     locationRestriction: place.location
                 })
-                // this.state.changeLocation([place.location.latitude, place.location.longitude])
-                // place represents user's selection from the
-                // suggestions and it is a simplified Google Place object.
             })
-            .catch(error => console.log(error.message));  // error is a Javascript Error object
+            .catch(error => console.log(error.message));
     }
 
     onTitleChanged = (text) => {

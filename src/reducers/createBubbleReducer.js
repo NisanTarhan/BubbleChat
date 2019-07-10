@@ -13,9 +13,9 @@ const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
-        case TITLE_CHANGED: //CreateBubble Ekranındaki title actionı
+        case TITLE_CHANGED: 
             return { ...state, title: action.payload }
-        case SAVE_BUBBLE: //CreateBuuble Ekranındaki button actionı
+        case SAVE_BUBBLE: 
             return { ...state, ...INITIAL_STATE }
         case LOCATION_CHANGED:
             return { ...state, location: action.payload }

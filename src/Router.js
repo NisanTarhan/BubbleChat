@@ -20,7 +20,7 @@ const RouterComp = () => {
                         title='CreateBubble'
                         component={CreateBubble} />
 
-                    <Scene key='detailBubble'
+                    <Scene key='bubbleDetail' 
                         title='BubbleDetail'
                         component={BubbleDetail} />
 

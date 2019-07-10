@@ -7,8 +7,6 @@ export const LOGIN_START = 'LOGIN_START';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_FAILED = 'LOGIN_FAILED';
 
-//İstek atmadığımız için action burada hazır ve geldiği an geri dönebiliyor.
-//SENKRON İŞLEM
 export const emailChanged = (email) => {
     return {
         type: EMAIL_CHANGED,
@@ -24,15 +22,6 @@ export const passwordChanged = (password) => {
 }
 
 
-/*Burada login isteğini atıcaz ve burada bir gecikme olacak ve bizim bir şey dönmemiz gerekecek.
-Action bitmediği için action dönemeyeceğiz.Bizim burada bir fonksiyon dönememiz gerekiyor. 
-(dispatch ile döneceğiz)Burada Firebase'e bir istek attık ve burada bir gecikme olacak.
-Yani bu bir asenkron işlem olacak. Yukarıdaki gibi senkron bir işlem olmayacak.
-Döndüğümüz fonksiyon işlem sonuçlandıktan sonra bir açtion dönecek.
-O action da reducer'ı güncelleyecek, daha sonra da bizim state'imiz güncellenecek ve biz de
-bu güncel state'i alacağız. Bu işlemler için bir ara katman olan ReduxThunk kullanacağız.
-Bu bir Redux kütüphanesidir.
-*/
 export const login = (email, password) => {
     return (dispatch) => {
         dispatch({

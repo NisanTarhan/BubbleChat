@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Dimensions, Image } from 'react-native';
 import { Button } from './common';
+import appIcon from '../images/appIcon.png'
 import { connect } from 'react-redux';
 import { emailChanged, passwordChanged, login } from '../actions';
 
@@ -29,6 +30,9 @@ class Login extends Component {
 
         return (
             <View style={styles.container}>
+
+                <Image source={appIcon}/> 
+
                 <View style={styles.inputView}>
                     <TextInput value={this.props.email} onChangeText={this.onEmailChanged} placeholder='Email' style={styles.textInput}></TextInput>
                     <TextInput value={this.props.password} onChangeText={this.onPasswordChanged} placeholder='Password' style={styles.textInput} secureTextEntry ></TextInput>
