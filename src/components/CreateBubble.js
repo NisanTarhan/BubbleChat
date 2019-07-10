@@ -14,7 +14,8 @@ class CreateBubble extends Component {
     state = {
         title: '',
         locationName : 'Search',
-        locationRestriction: {}
+        locationRestriction: {},
+        comment: []
     }
 
     openSearchModal() {
@@ -36,8 +37,8 @@ class CreateBubble extends Component {
     }
 
     saveBubble = () => {
-        const { title, locationRestriction } = this.state;
-        this.props.saveBubble(title, locationRestriction);
+        const { title, locationRestriction, comment } = this.state;
+        this.props.saveBubble(title, locationRestriction, comment);
     }
 
     render() {

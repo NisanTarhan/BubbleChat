@@ -5,13 +5,21 @@ import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import { changeRegion, fetchBuble } from '../actions';
-import { Marker } from 'react-native-maps';
-import MapView from 'react-native-map-clustering';
+import ClusteredMapView from 'react-native-maps-super-cluster'
+import MapView, { Marker } from 'react-native-maps';
 import addButton from '../images/add_bubble.png';
 import exitButton from '../images/exit.png';
 
 const { width, height } = Dimensions.get('window');
 
+const CLUSTER_MAX_SIZE = 30
+
+const INIT_REGION = {
+  latitude: 38.963745,
+  longitude: 35.243322,
+  latitudeDelta: 25,
+  longitudeDelta: 25,
+}
 
 class MapScreen extends Component {
   state = {
@@ -21,57 +29,54 @@ class MapScreen extends Component {
       latitudeDelta: 20.4922,
       longitudeDelta: 20.4421,
     },
-    // markers: [{
-    //   title: 'hello',
-    //   coordinates: {
-    //     latitude: 3.148561,
-    //     longitude: 101.652778
-    //   },
-    // },
-    // {
-    //   title: 'hello',
-    //   coordinates: {
-    //     latitude: 3.149771,
-    //     longitude: 101.655449
-    //   },  
-    // }]
   }
 
   componentDidMount() {
     this.props.fetchBuble();
   }
 
+
+  renderCluster = (cluster, onPress) => {
+    const pointCount = cluster.pointCount,
+      coordinate = cluster.coordinate,
+      clusterId = cluster.clusterId
+
+    const clusteringEngine = this.map.getClusteringEngine(),
+      clusteredPoints = clusteringEngine.getLeaves(clusterId, 100)
+
+    return (
+      <Marker coordinate={coordinate} onPress={onPress}>
+        <View style={styles.myClusterStyle}>
+          <Text style={styles.myClusterTextStyle}>
+            {pointCount}
+          </Text>
+        </View>
+      </Marker>
+    )
+  }
+
+  renderMarker = (bubble) => <Marker key={bubble.uId}
+    coordinate={bubble.location}
+    //  title={bubble.title}
+    image={require('../images/marker.png')}
+  //  onPress={() => Actions.bubbleDetail({ bubbleTitle: bubble.title })}
+  >
+    <MapView.Callout style={{ width: 80, height: 30 }} onPress={() => Actions.bubbleDetail({ bubbleTitle: bubble.title, bubbleId: bubble.uId})}>
+      <Text>{bubble.title}</Text>
+    </MapView.Callout>
+  </Marker>
+
   render() {
 
     return (
       <View style={{ flex: 1 }}>
-        <MapView
+        <ClusteredMapView
           style={{ flex: 1 }}
-          clustering={true}
-          clusterColor='#000'
-          clusterTextColor='#fff'
-          clusterBorderColor='#fff'
-          // clusterBorderWidth={4}
-          region={this.state.region}
-        // onRegionChange={this.onRegionChange}
-        >
-
-          {this.props.bubbles.map(bubble => {
-            console.log('BUBBLE:')
-            console.log(bubble.location)
-            return (
-              <Marker
-                key={bubble.uId}
-                coordinate={bubble.location}
-                title={bubble.title}
-                image={require('../images/marker.png')}
-                onPress={() => Actions.bubbleDetail({ bubbleTitle: bubble.title })}
-              >
-              </Marker>
-            )
-          })}
-
-        </MapView>
+          data={this.props.bubbles}
+          initialRegion={INIT_REGION}
+          ref={(r) => { this.map = r }}
+          renderMarker={this.renderMarker}
+          renderCluster={this.renderCluster} />
 
         <TouchableOpacity style={styles.addButtonStyle} onPress={() => Actions.createBubble()} >
           <Image source={addButton} style={{ height: height * 0.18, width: width * 0.18 }} />
@@ -104,6 +109,21 @@ const styles = StyleSheet.create({
     height: height * 0.13,
     resizeMode: 'contain',
     marginLeft: 5,
+  },
+  myClusterStyle: {
+    width: CLUSTER_MAX_SIZE,
+    height: CLUSTER_MAX_SIZE,
+    backgroundColor: '#3a2ae9',
+    borderRadius: CLUSTER_MAX_SIZE / 2,
+    borderWidth: 1,
+    borderColor: 'white',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  myClusterTextStyle: {
+    fontSize: 15,
+    color: 'white',
   }
 })
 
@@ -115,8 +135,6 @@ const mapStateToProps = state => {
   });
   console.log(bubbles)
   return { bubbles }
-  // const {region} = state.mapReducer
-  // return{region}
 }
 
 

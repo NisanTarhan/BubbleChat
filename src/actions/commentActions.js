@@ -6,10 +6,10 @@ const REF_DATABASE = '/commands';
 
 export const saveCommand = (command) => {
     const currentUser = firebase.auth().currentUser;
-    const email = currentUser.email;
+    const uId = currentUser.uid;
     return (dispatch) => {
         firebase.database().ref(REF_DATABASE)
-        .push({email, command})
+        .push({uId, command})
         .then(() => {
             dispatch({
                 type: SAVE_COMMAND,

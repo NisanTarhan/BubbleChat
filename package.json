@@ -14,6 +14,7 @@
     "react-native-google-places": "^3.1.1",
     "react-native-map-clustering": "^1.3.2",
     "react-native-maps": "^0.24.2",
+    "react-native-maps-super-cluster": "^1.5.0",
     "react-native-router-flux": "^4.0.6",
     "react-redux": "^7.1.0",
     "redux": "^4.0.1",

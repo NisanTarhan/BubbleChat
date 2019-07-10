@@ -28,14 +28,13 @@ export const changeLocation = (location) => {
     }
 }
 
-export const saveBubble = (title, location) => {
+export const saveBubble = (title, location, comment) => {
     const currentUser = firebase.auth().currentUser;
     const email = currentUser.email;
     return (dispatch) => {
         firebase.database().ref(REF_DATABASE)
-            .push({ email, title, location })
+            .push({ email, title, location, comment })
             .then(() => {
-                // Actions.pop({ refresh: { data: { location } } })
                 Actions.pop();
                 dispatch({
                     type: SAVE_BUBBLE,
