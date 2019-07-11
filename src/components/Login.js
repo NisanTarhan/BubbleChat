@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, TextInput, StyleSheet, Dimensions, Image } from 'react-native';
 import { Button } from './common';
 import appIcon from '../images/appIcon.png'
+import { colors } from '../style';
 import { connect } from 'react-redux';
 import { emailChanged, passwordChanged, login } from '../actions';
 
@@ -12,7 +13,7 @@ class Login extends Component {
 
     onButtonClick = () => {
         const {email, password} = this.props;
-        this.props.login(email, password);
+        this.props.login(email.trim(), password);
     }
 
     onEmailChanged = (text) => {
@@ -53,7 +54,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#5f27cd',
+        backgroundColor: colors.main,
     },
     inputView: {
         paddingTop: 5,

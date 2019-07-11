@@ -11,13 +11,15 @@ const Card = (props) => {
 
 const styles = StyleSheet.create({
     cardWrapper: {
-        height: 87,
-        margin: 10,
+        height: 60,
+        margin: 7,
+        padding: 10,
         borderWidth: 1,
-        borderRadius: 2,
+        borderRadius: 5,
         borderColor: '#dddddd',
         justifyContent: 'space-between',
         alignItems: 'flex-start',
+        backgroundColor: '#f5f6fa',
     }
 })
 

@@ -1,102 +1,138 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, StyleSheet, FlatList, Dimensions, TouchableOpacity } from 'react-native';
-import {connect} from 'react-redux';
-
+import { View, SafeAreaView, Text, TextInput, StyleSheet, FlatList, Dimensions, TouchableOpacity } from 'react-native';
+import { connect } from 'react-redux';
+import _ from 'lodash';
+import { saveComment, fetchComment } from '../actions'
 import { Card } from './common';
+import { colors } from '../style';
+
 
 const { width, height } = Dimensions.get('window');
 
 class BubbleDetail extends Component {
 
     state = {
-        command: ''
+        comment: ''
     }
 
-    changeCommand = (text) => {
-        this.setState({ command: text })
+    componentDidMount() {
+        console.log(this.props.bubbleId)
+        this.props.fetchComment(this.props.bubbleId)
     }
 
-    // renderItem({ item }) {
-    //     return (
-    //         <View key={item.uid}>
-    //             <Card>
-    //                 <Text style={styles.tweetStyle}>{item.tweet}</Text>
-    //                 <Text style={styles.emailSyle}>{item.email}</Text>
-    //             </Card>
-    //         </View>
-    //     )
-    // }
+    changeComment = (text) => {
+        this.setState({ comment: text })
+    }
+
+    sendComment = () => {
+        this.props.saveComment(this.props.bubbleId, this.state.comment)
+    }
+
+    renderItem({ item }) {
+        return (
+            <View key={item.uId}>
+                <Card>
+                    <Text style={styles.commentStyle}>{item.comment}</Text>
+                    <Text style={styles.emailSyle}>{item.email}</Text>
+                </Card>
+            </View>
+        )
+    }
 
     render() {
         return (
-            <View style={{ flex: 1 }}>
+            <SafeAreaView style={styles.container}>
                 <Text style={styles.title}>{this.props.bubbleTitle}</Text>
 
-                <View style={{flex: 5, backgroundColor: 'red'}}>
-
-                </View>
-                {/* <FlatList
-                    style={{width, height: height* 0.60, backgroundColor: 'red'}}
-                    data={tweetList}
+                <FlatList
+                    style={{ flex: 1, backgroundColor: '#273c75' }}
+                    data={this.props.comments}
                     renderItem={this.renderItem}
-                    keyExtractor={(item) => item.uid} /> */}
-                <View style={styles.commandView}>
-                    <TextInput style={styles.commandBox}
-                        value={this.state.command}
-                        onChangeText={this.changeCommand}
+                    keyExtractor={(item) => item.uId} />
+
+                <View style={styles.commentView}>
+                    <TextInput style={styles.commentBox}
+                        value={this.state.comment}
+                        onChangeText={this.changeComment}
                         placeholder='Type Here...'
                         maxLength={200} />
 
-                    <TouchableOpacity style={styles.button}>
-                        <Text>SEND</Text>
+                    <TouchableOpacity style={styles.touchableOpacity} onPress={this.sendComment}>
+                        <View style={styles.buttonView}>
+                            <Text style={{color: '#ecf0f1', fontWeight: '500',}}>SEND</Text>
+                        </View>
                     </TouchableOpacity>
                 </View>
-                
-            </View>
+
+            </SafeAreaView>
         )
     }
 }
 
 const styles = StyleSheet.create({
+    container:{
+        flex: 1,
+        backgroundColor: colors.main
+    },
     title: {
         margin: 20,
         fontSize: 20,
-        borderColor: 'red',
-        borderWidth: 2,
+        borderColor: '#e74c3c',
+        backgroundColor: colors.backgroundColor,
+        borderRadius: 5,
+        color: '#e74c3c',
+        borderWidth: 3,
         padding: 20,
         fontWeight: '500',
         alignSelf: 'center'
     },
-    commandBox: {
+    commentBox: {
         flex: 4,
-        backgroundColor: '#FFF',
+        backgroundColor: colors.backgroundColor,
         margin: 10,
+        borderRadius: 5
     },
-    commandStyle: {
+    commentStyle: {
         color: '#7B8D93',
-        fontSize: 18,
+        fontSize: 15,
         paddingTop: 2
     },
     emailSyle: {
         color: '#AAB1B4',
         fontSize: 14,
         alignSelf: 'flex-end',
-        paddingBottom: 5,
+        paddingBottom: 3
     },
-    commandView: {
-        flex: 1,
+    commentView: {
+        height: height * 0.1,
+        width,
         flexDirection: 'row',
-        backgroundColor: 'blue',
-        alignItems: 'center'
+        backgroundColor: colors.main,
+        justifyContent: 'center',
+        alignItems: 'flex-end'
     },
-    button:{
+    touchableOpacity: {
         flex: 1,
-        backgroundColor:'red',
+        backgroundColor: '#2ecc71',
         height: 50,
         marginRight: 10,
+        marginBottom: 10,
+        borderRadius: 5
+    },
+    buttonView: {
+        flex: 1,
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'center'
     }
 })
 
-export default BubbleDetail;
+const mapStateToProps = state => {
+    console.log(state.commentReducer)
+    const comments = _.map(state.commentReducer, (comment, uId) => {
+        return { ...comment, uId }
+    });
+    console.log(comments)
+    return { comments }
+}
+
+export default connect(mapStateToProps, { saveComment, fetchComment })(BubbleDetail);

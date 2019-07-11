@@ -18,7 +18,7 @@ const Button = (props) => {
 
 const styles = StyleSheet.create({
     buttonStyle: {
-        backgroundColor: '#ee5253',
+        backgroundColor: '#27ae60',
         width: '80%',
         height: height * 0.06,
         alignItems: 'center',

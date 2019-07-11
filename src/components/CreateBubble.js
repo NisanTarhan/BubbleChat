@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, StyleSheet, Dimensions, SafeAreaView, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Dimensions, SafeAreaView, TouchableOpacity, Image } from 'react-native';
 import RNGooglePlaces from 'react-native-google-places';
 import { connect } from 'react-redux';
 import { changeTitle } from '../actions';
 import { Button } from './common';
 import { saveBubble, changeLocation } from '../actions';
-
+import appIcon from '../images/appIcon.png'
+import { colors } from '../style';
 
 const { width, height } = Dimensions.get('window');
 
@@ -13,9 +14,18 @@ class CreateBubble extends Component {
 
     state = {
         title: '',
-        locationName : 'Search',
+        locationName: 'Search',
         locationRestriction: {},
-        comment: []
+        curTime: null,
+
+    }
+
+    componentDidMount() {
+        setInterval(() => {
+            this.setState({
+                curTime: new Date().toLocaleString()
+            })
+        }, 1000)
     }
 
     openSearchModal() {
@@ -25,7 +35,7 @@ class CreateBubble extends Component {
                 this.setState({
                     title: '',
                     locationName: place.name,
-                    locationRestriction: place.location
+                    locationRestriction: place.location,
                 })
             })
             .catch(error => console.log(error.message));
@@ -33,18 +43,20 @@ class CreateBubble extends Component {
 
     onTitleChanged = (text) => {
         // this.props.changeTitle(text);
-        this.setState({title: text})
+        this.setState({ title: text })
     }
 
     saveBubble = () => {
-        const { title, locationRestriction, comment } = this.state;
-        this.props.saveBubble(title, locationRestriction, comment);
+        const { title, locationRestriction, curTime } = this.state;
+        this.props.saveBubble(title, locationRestriction, curTime);
     }
 
     render() {
         const { loading } = this.props
         return (
             <SafeAreaView style={styles.container}>
+
+                <Image source={appIcon} />
 
                 <TouchableOpacity style={styles.searchInput} onPress={() => this.openSearchModal()}>
                     <Text>{this.state.locationName}</Text>
@@ -69,6 +81,7 @@ class CreateBubble extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: colors.main,
         justifyContent: 'center',
         alignItems: 'center'
     },
@@ -99,6 +112,7 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
         justifyContent: 'center',
         paddingLeft: 5,
+        marginTop: 30
     }
 })
 
