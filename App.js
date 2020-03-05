@@ -17,7 +17,6 @@ import Router from './src/Router';
 
 export default class App extends Component {
 
-  //App tamamen DOM'a yazılmadan önce yani bu component ayağa kalkmadan önce(bağlandığında) bu kod çalışacak.
   componentWillMount() {
     const firebaseConfig = {
       apiKey: "AIzaSyDhaRUvSYIcKGXyPBaIFOKQiaK1ob0gGfg",
